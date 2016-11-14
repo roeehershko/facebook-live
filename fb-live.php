@@ -19,7 +19,7 @@ $fb = new Facebook\Facebook([
 // 573576516163570_629760447211843
 try {
     // Returns a `Facebook\FacebookResponse` object
-    $response = $fb->get('/1123749074341674?fields=reactions.type(HAHA).limit(0).summary(total_count).as(reactions_haha),reactions.type(LOVE).limit(0).summary(total_count).as(reactions_love)', '334030580299311|M6lEOkKdhPBDXG8N1n-3i4qwvoA');
+    $response = $fb->get('/1125096424206939?fields=reactions.type(HAHA).limit(0).summary(total_count).as(reactions_haha),reactions.type(LOVE).limit(0).summary(total_count).as(reactions_love)', '334030580299311|M6lEOkKdhPBDXG8N1n-3i4qwvoA');
     $response = json_decode($response->getBody(), TRUE);
 
     $haha_total = isset($response['reactions_haha']['summary']['total_count'])? $response['reactions_haha']['summary']['total_count'] : 125;
