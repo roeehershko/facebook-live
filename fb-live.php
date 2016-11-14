@@ -25,7 +25,6 @@ try {
     $haha_total = isset($response['reactions_haha']['summary']['total_count'])? $response['reactions_haha']['summary']['total_count'] : 125;
     $love_total = isset($response['reactions_love']['summary']['total_count'])? $response['reactions_love']['summary']['total_count'] : 85;
 
-
 } catch (Facebook\Exceptions\FacebookResponseException $e) {
     $haha_total = 125;
     $love_total = 87;
@@ -78,11 +77,11 @@ try {
 <div class="container">
     <div class="live-container">
         <div class="results love">
-            <?= $haha_total ?>
+            <?= $love_total  ?>
 
         </div>
         <div class="results haha">
-            <?= $love_total ?>
+            <?= $haha_total ?>
         </div>
     </div>
 </div>
