@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Call Put Game</title>
+    <style>
+        .container {
+            width: 600px;
+            margin: 50px auto;
+        }
+
+        canvas {
+            border: 1px solid #000;
+        }
+
+        #results {
+            height: 30px;
+        }
+
+        .won {
+            float: left;
+            width: 20px;
+            height: 20px;
+            border-radius: 100%;
+            background: green;
+            margin: 5px 5px 5px 0;
+        }
+
+        .lost {
+            float: left;
+            width: 20px;
+            height: 20px;
+            border-radius: 100%;
+            background: red;
+            margin: 5px 5px 5px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h3>Your Results</h3>
+    <div id="results"></div>
+    <canvas id="call-put-canvas" width="600" height="400"></canvas>
+    <button id="call-btn" type="button">Call</button>
+    <button id="put-btn" type="button">Put</button>
+    <button id="reset-btn" type="button">Reset</button>
+</div>
+<script>
+    var c = document.getElementById("call-put-canvas");
+    var ctx = c.getContext("2d");
+
+    var DrawChart = function(maxWidth, winPercentage) {
+        this.maxWidth = maxWidth;
+        this.WP = winPercentage;
+        this.currentWP = 0;
+        this.gamesData = {
+            won: 0,
+            lost: 0
+        };
+
+        this.reset();
+    };
+
+    DrawChart.prototype.draw = function () {
+
+    };
+
+    DrawChart.prototype.update = function () {
+
+    };
+
+    DrawChart.prototype.addQueue = function (lines) {
+
+    };
+
+    DrawChart.prototype.reset = function (direction) {
+        this.xTicks = this.drawChart({}, this.maxWidth - 100, direction);
+        this.played = 0;
+    };
+
+    DrawChart.prototype.updateWP = function () {
+        var totalGames = this.gamesData.won + this.gamesData.lost;
+        this.currentWP = 100 / totalGames * this.gamesData.won;
+    };
+
+    DrawChart.prototype.play = function (direction) {
+        if (this.played) {
+            console.warn('Widget reset required before playing again')
+            return null
+        }
+
+        var prevTick = this.lastTick;
+        this.drawChart(this.xTicks, this.maxWidth, direction);
+        this.played = 1;
+        var results = this.lastTick > prevTick ? 0 : 1;
+
+        if (direction === results) {
+            this.gamesData.won += 1;
+        }
+        else {
+            this.gamesData.lost += 1;
+        }
+
+        this.updateWP();
+
+        return direction === results;
+    };
+
+    DrawChart.prototype.calculateTicks = function (xTicks, maxWidth, direction) {
+        xTicks = xTicks || {};
+        var y = 200;
+
+        var rates = this.getRates();
+
+        for (var xTick = -5; xTick <= maxWidth; xTick += 5) {
+            var rand = (20 * Math.random());
+
+            if (y < 100) {
+                y = y + rand + 10;
+            }
+            else if (y > 300) {
+                y = y + rand - 20
+            }
+            else {
+                if (direction === 1) {
+                    y = y + rand - rates[0];
+                }
+                else if (direction === 0) {
+                    y = y + rand - rates[1];
+                }
+                else {
+                    y = y + rand - 10;
+                }
+            }
+
+            xTicks[xTick] = xTicks[xTick] || y;
+        }
+
+        return xTicks;
+    };
+
+    DrawChart.prototype.getRates = function () {
+        console.log(this.currentWP);
+
+        var rates = [
+            [11, 9],
+            [10.4, 9.6],
+            [10, 10],
+            [9.5, 10.5]
+        ];
+
+        if (
+            this.WP == this.currentWP ||
+            (
+                this.WP <= this.currentWP + 5 &&
+                this.WP >= this.currentWP - 5
+            )
+        )
+        {
+            console.log('EVEN');
+            if (this.WP >= 80) {
+                return rates[1]
+            }
+            else if (this.WP >= 60) {
+                return rates[1]
+            }
+            else {
+                return rates[2];
+            }
+        }
+        else if (
+                this.currentWP >= this.WP
+        )
+        {
+            console.log('Too High');
+            return rates[3];
+        }
+        else
+        {
+            console.log('Too Low');
+
+            if (this.WP >= 80) {
+                return rates[0]
+            }
+            else {
+                return rates[1]
+            }
+        }
+    };
+
+    DrawChart.prototype.drawChart = function (xTicks, maxWidth, direction) {
+        var lastTick = null;
+
+        ctx.clearRect(0, 0, 600, 400);
+        var xPos = true;
+
+        ctx.beginPath();
+        ctx.lineTo(0, 400);
+
+        var newTicks = this.calculateTicks(xTicks, maxWidth, direction);
+
+        for (var x = -5; x <= maxWidth; x += 5) {
+            ctx.lineCap = "round";
+            ctx.lineWidth = 3;
+            ctx.lineTo(x + 5, newTicks[x]);
+            xPos = !xPos;
+
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = '#da932f';
+            ctx.stroke();
+            lastTick = newTicks[x];
+        }
+
+        this.lastTick = lastTick;
+
+        ctx.lineTo(maxWidth, 400);
+        ctx.stroke();
+
+        ctx.closePath();
+        ctx.fillStyle = '#f0ad4e';
+        ctx.fill();
+
+        return xTicks;
+    };
+
+    var drawChart = new DrawChart(600, 80);
+
+    document.getElementById('call-btn').addEventListener('click', function () {
+        var res = drawChart.play(1);
+
+        if (res === null) return;
+
+        if (res) {
+            document.getElementById('results').innerHTML += '<div class="won"></div>';
+        }
+        else {
+            document.getElementById('results').innerHTML += '<div class="lost"></div>';
+        }
+    });
+
+    document.getElementById('put-btn').addEventListener('click', function () {
+        var res = drawChart.play(0);
+
+        if (res === null) return;
+
+        if (res) {
+            document.getElementById('results').innerHTML += '<div class="won"></div>';
+        }
+        else {
+            document.getElementById('results').innerHTML += '<div class="lost"></div>';
+        }
+    });
+
+    document.getElementById('reset-btn').addEventListener('click', function () {
+        drawChart.reset();
+    });
+
+</script>
+</body>
+</html>
