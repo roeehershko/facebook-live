@@ -102,7 +102,7 @@ try {
             $('.results.haha').text(haha + Math.round(Math.random() * 3));
             haha = parseInt($('.results.haha').text());
         }, 2000 * Math.random())
-    }, 1000);
+    }, 5000);
 
 
     setInterval(function () {
@@ -110,7 +110,7 @@ try {
             $('.results.love').text(love + Math.round(Math.random() * 3));
             love = parseInt($('.results.love').text());
         }, 2000 * Math.random())
-    }, 1000);
+    }, 5000);
 </script>
 </body>
 </html>
