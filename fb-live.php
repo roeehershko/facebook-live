@@ -97,7 +97,20 @@ try {
     var love = parseInt($('.results.love').text());
     var haha = parseInt($('.results.haha').text());
 
+    setInterval(function () {
+        setTimeout(function () {
+            $('.results.haha').text(haha + Math.round(Math.random() * 3));
+            haha = parseInt($('.results.haha').text());
+        }, 2000 * Math.random())
+    }, 1000);
 
+
+    setInterval(function () {
+        setTimeout(function () {
+            $('.results.love').text(love + Math.round(Math.random() * 3));
+            love = parseInt($('.results.love').text());
+        }, 2000 * Math.random())
+    }, 1000);
 </script>
 </body>
 </html>
