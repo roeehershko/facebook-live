@@ -39,36 +39,44 @@ try {
 <head>
     <meta charset="UTF-8">
     <title>BvB</title>
+    <script
+        src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
     <style>
         .container {
             position: relative;
             font-family: Arial;
-            width: 500px;
-            height: 400px;
-            background-image: url(bvb.jpg);
+            width: 580px;
+            height: 277px;
+            background-image: url(uvu.jpg);
         }
         .results {
             position: absolute;
             color: #fff;
             font-size: 30px;
+            background: rgb(224, 22, 12);
+            margin-bottom: 12px;
+            bottom: -27px;
         }
 
         .results.haha {
-            bottom: 6px;
             color: #fcd87a;
             font-weight: bold;
             width: 50%;
             left: 50%;
             text-align: center;
+            padding-left: 26px;
+            box-sizing: border-box;
         }
 
         .results.love {
-            bottom: 6px;
             left: 0;
             width: 50%;
             color: #ffffff;
             font-weight: bold;
             text-align: center;
+            background: #009ada;
         }
 
     </style>
@@ -85,5 +93,11 @@ try {
         </div>
     </div>
 </div>
+<script>
+    var love = parseInt($('.results.love').text());
+    var haha = parseInt($('.results.haha').text());
+
+
+</script>
 </body>
 </html>
